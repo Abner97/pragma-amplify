@@ -8,6 +8,7 @@ import "@aws-amplify/ui-react/styles.css";
 import outputs from "@/amplify_outputs.json";
 import { fetchTodos, createTodo, TodoWithUserData } from "./api";
 import "./../app/app.css";
+import { signOut } from "aws-amplify/auth";
 
 Amplify.configure(outputs);
 
@@ -31,6 +32,7 @@ export default function App() {
       const todos = await fetchTodos();
       setTodos(todos);
     };
+    
     loadTodos();
   }, []);
 
@@ -42,18 +44,24 @@ export default function App() {
 
   return (
     <Authenticator signUpAttributes={['name']}>
-      <main>
-        <h1>My todos</h1>
-        <button onClick={handleCreateTodo}>+ new</button>
-        <TodoList todos={todos} />
-        <div>
-          🥳 App successfully hosted. Try creating a new todo.
-          <br />
-          <a href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/">
-            Review next steps of this tutorial.
-          </a>
-        </div>
-      </main>
+  {({ signOut, user }) => (
+     <main>
+    <div className="signOutContainer">
+      <button onClick={signOut}>Sign Out</button>
+    </div>
+     <h1>{user?.signInDetails?.loginId} Todos</h1>
+     <button onClick={handleCreateTodo}>+ new</button>
+     <TodoList todos={todos} />
+     <div>
+       🥳 App successfully hosted. Try creating a new todo.
+       <br />
+       <a href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/">
+         Review next steps of this tutorial.
+       </a>
+     </div>
+   </main>
+  )}
+     
     </Authenticator>
   );
 }

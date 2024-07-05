@@ -45,3 +45,10 @@ export async function createTodo(): Promise<void> {
     await client.models.Todo.create({ content }, { authMode: 'userPool' });
   }
 }
+
+// export async function getUserData(id:string): Promise<Schema["User"]["type"]> {
+//   const user = await client.models.User.get({ id },{
+//     authMode: 'userPool'
+//   });
+//   return user;
+// }
